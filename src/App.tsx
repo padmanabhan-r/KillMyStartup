@@ -12,7 +12,7 @@ const stateLabels: Record<AppState, string> = {
 };
 
 export default function App() {
-  const { appState, turns, startSession, endSession, error } = useAppConversation();
+  const { appState, connecting, turns, startSession, endSession, error } = useAppConversation();
 
   const handleClick = () => {
     if (appState === 'idle') startSession();
@@ -34,12 +34,14 @@ export default function App() {
 
           <button
             onClick={handleClick}
+            disabled={connecting}
             className={`kill-button ${
+              connecting ? "opacity-50 cursor-not-allowed" :
               appState === "listening" || appState === "searching" ? "kill-button--listening" :
               appState === "roasting" ? "kill-button--roasting" : ""
             }`}
           >
-            {stateLabels[appState]}
+            {connecting ? "Connecting..." : stateLabels[appState]}
           </button>
 
           {error && (

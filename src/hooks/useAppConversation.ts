@@ -5,6 +5,7 @@ import { parseSources } from '../types';
 
 export function useAppConversation() {
   const [appState, setAppState] = useState<AppState>('idle');
+  const [connecting, setConnecting] = useState<boolean>(false);
   const [turns, setTurns] = useState<Turn[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,6 +36,7 @@ export function useAppConversation() {
   const startSession = async () => {
     setError(null);
     setTurns([]);
+    setConnecting(true);
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
 
@@ -54,6 +56,8 @@ export function useAppConversation() {
       } else {
         setError('Failed to connect. Please try again.');
       }
+    } finally {
+      setConnecting(false);
     }
   };
 
@@ -63,5 +67,5 @@ export function useAppConversation() {
     setTurns([]);
   };
 
-  return { appState, turns, startSession, endSession, error };
+  return { appState, connecting, turns, startSession, endSession, error };
 }
