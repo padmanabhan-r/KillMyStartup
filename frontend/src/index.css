@@ -1,0 +1,31 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #080808;
+  --text: #ffffff;
+  --text-dim: rgba(255, 255, 255, 0.4);
+  --text-dimmer: rgba(255, 255, 255, 0.2);
+  --border: rgba(255, 255, 255, 0.08);
+
+  --color-idle: rgba(255, 255, 255, 0.9);
+  --color-listening: #ffffff;
+  --color-searching: #f59e0b;
+  --color-roasting: #ef4444;
+
+  font-family: system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
