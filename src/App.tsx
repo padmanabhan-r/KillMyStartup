@@ -120,7 +120,7 @@ function downloadReport(turns: Turn[]) {
   doc.setFontSize(7);
   doc.setTextColor(160, 160, 160);
   doc.text('Powered by ElevenLabs & Firecrawl', margin, y);
-  doc.text('killmystartup.vercel.app', W - margin, y, { align: 'right' });
+  doc.text('kill-my-startup-today.vercel.app', W - margin, y, { align: 'right' });
 
   doc.save(`autopsy-report-${Date.now()}.pdf`);
 }
