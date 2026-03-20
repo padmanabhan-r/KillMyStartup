@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { useConversation } from '@elevenlabs/react';
-import type { AppState, Source } from '../types';
+import type { AppState, Turn } from '../types';
 import { parseSources } from '../types';
 
 export function useAppConversation() {
   const [appState, setAppState] = useState<AppState>('idle');
-  const [sources, setSources] = useState<Source[]>([]);
-  const [idea, setIdea] = useState<string>('');
+  const [turns, setTurns] = useState<Turn[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const conversation = useConversation({
@@ -16,8 +15,7 @@ export function useAppConversation() {
         return 'ok';
       },
       show_sources: ({ idea: rawIdea, sources: rawSources }: { idea: string; sources: string }) => {
-        setIdea(rawIdea ?? '');
-        setSources((prev) => [...prev, ...parseSources(rawSources ?? '')]);
+        setTurns((prev) => [...prev, { idea: rawIdea ?? '', sources: parseSources(rawSources ?? '') }]);
         return 'ok';
       },
     },
@@ -36,8 +34,7 @@ export function useAppConversation() {
 
   const startSession = async () => {
     setError(null);
-    setSources([]);
-    setIdea('');
+    setTurns([]);
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
 
@@ -63,9 +60,8 @@ export function useAppConversation() {
   const endSession = async () => {
     await conversation.endSession();
     setAppState('idle');
-    setSources([]);
-    setIdea('');
+    setTurns([]);
   };
 
-  return { appState, sources, idea, startSession, endSession, error };
+  return { appState, turns, startSession, endSession, error };
 }

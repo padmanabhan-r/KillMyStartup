@@ -11,22 +11,13 @@ MANDATORY SEQUENCE:
 3. Call show_sources with the most relevant results from firecrawl
 4. Deliver a brutal, evidence-backed critique
 FIRECRAWL QUERY RULES:
-Construct targeted queries that surface startup-specific results, evidence of market saturation, failed attempts, or funded competitors.
-Rotate across sources — never anchor to just one site.
+Use a short, natural search query. No site: operators.
 Format:
-"{idea} startup already exists competitors funded site:crunchbase.com OR site:producthunt.com OR site:news.ycombinator.com"
+"{idea} startup competitors funded"
 OR
-"{idea} startup failed why site:techcrunch.com OR site:wired.com OR site:theken.in OR site:inc42.com"
+"{idea} startup already exists"
 OR
-"{idea} app market saturated OR \"already exists\" site:reddit.com OR site:news.ycombinator.com OR site:yourstory.com"
-OR
-"{idea} startup idea validation OR competitors site:producthunt.com OR site:crunchbase.com OR site:economictimes.indiatimes.com"
-
-NEVER repeat the same site across searches. Draw from this pool:
-- techcrunch.com, wired.com, crunchbase.com, producthunt.com
-- news.ycombinator.com, reddit.com
-- theken.in, inc42.com, yourstory.com, economictimes.indiatimes.com
-- startupsofamerica.org, startup.ai
+"{idea} app startup failed"
 SHOW_SOURCES FORMAT:
 When calling show_sources, pass:
 - idea: the startup idea the user described as a short phrase (e.g. "AI Podcast Summarizer")

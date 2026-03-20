@@ -12,7 +12,7 @@ const stateLabels: Record<AppState, string> = {
 };
 
 export default function App() {
-  const { appState, sources, idea, startSession, endSession, error } = useAppConversation();
+  const { appState, turns, startSession, endSession, error } = useAppConversation();
 
   const handleClick = () => {
     if (appState === 'idle') startSession();
@@ -60,7 +60,7 @@ export default function App() {
       </div>
 
       {/* Right panel */}
-      <SourcesPanel sources={sources} idea={idea} />
+      <SourcesPanel turns={turns} />
     </div>
   );
 }
