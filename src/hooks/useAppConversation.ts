@@ -64,7 +64,6 @@ export function useAppConversation() {
   const endSession = async () => {
     await conversation.endSession();
     setAppState('idle');
-    setTurns([]);
   };
 
   return { appState, connecting, turns, startSession, endSession, error };

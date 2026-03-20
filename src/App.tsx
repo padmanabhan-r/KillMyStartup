@@ -1,8 +1,9 @@
+import { jsPDF } from 'jspdf';
 import { Orb } from './components/Orb';
 import { SourcesPanel } from './components/SourcesPanel';
 import { PoweredBy } from './components/PoweredBy';
 import { useAppConversation } from './hooks/useAppConversation';
-import type { AppState } from './types';
+import type { AppState, Turn } from './types';
 
 const stateLabels: Record<AppState, string> = {
   idle: "Kill My Startup",
@@ -11,6 +12,119 @@ const stateLabels: Record<AppState, string> = {
   roasting: "I Quit",
 };
 
+function downloadReport(turns: Turn[]) {
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const W = 210;
+  const margin = 20;
+  const contentW = W - margin * 2;
+  let y = 0;
+
+  const addPage = () => {
+    doc.addPage();
+    y = margin;
+  };
+
+  const checkY = (needed: number) => {
+    if (y + needed > 277) addPage();
+  };
+
+  // --- Dark header band ---
+  doc.setFillColor(8, 8, 8);
+  doc.rect(0, 0, W, 28, 'F');
+
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(7);
+  doc.setTextColor(120, 120, 120);
+  doc.text('KILLMYSTARTUP', margin, 11);
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(14);
+  doc.setTextColor(220, 220, 220);
+  doc.text('AUTOPSY REPORT', margin, 21);
+
+  const date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(7);
+  doc.setTextColor(80, 80, 80);
+  doc.text(date, W - margin, 21, { align: 'right' });
+
+  y = 38;
+
+  turns.forEach((turn, turnIndex) => {
+    // Turn divider (except first)
+    if (turnIndex > 0) {
+      checkY(16);
+      doc.setDrawColor(220, 50, 50);
+      doc.setLineWidth(0.3);
+      doc.line(margin, y, W - margin, y);
+      y += 10;
+    }
+
+    // Idea title
+    checkY(14);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(13);
+    doc.setTextColor(30, 30, 30);
+    const ideaLines = doc.splitTextToSize(turn.idea, contentW);
+    doc.text(ideaLines, margin, y);
+    y += ideaLines.length * 6 + 6;
+
+    // Sources
+    turn.sources.forEach((source) => {
+      checkY(22);
+
+      // Source card background
+      doc.setFillColor(248, 248, 248);
+      doc.roundedRect(margin, y - 3, contentW, 22, 1, 1, 'F');
+
+      // Domain
+      let domain = source.url;
+      try { domain = new URL(source.url).hostname.replace('www.', ''); } catch { /* ignore */ }
+      doc.setFont('courier', 'normal');
+      doc.setFontSize(7);
+      doc.setTextColor(150, 50, 50);
+      doc.text(domain.toUpperCase(), margin + 3, y + 3);
+
+      // Title
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(30, 30, 30);
+      const titleLines = doc.splitTextToSize(source.title, contentW - 6);
+      doc.text(titleLines.slice(0, 2), margin + 3, y + 8);
+
+      // Description
+      if (source.description) {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8);
+        doc.setTextColor(100, 100, 100);
+        const descLines = doc.splitTextToSize(source.description, contentW - 6);
+        doc.text(descLines.slice(0, 2), margin + 3, y + 15);
+      }
+
+      // Clickable link
+      doc.link(margin, y - 3, contentW, 22, { url: source.url });
+
+      y += 26;
+    });
+
+    y += 4;
+  });
+
+  // Footer
+  checkY(12);
+  doc.setDrawColor(220, 220, 220);
+  doc.setLineWidth(0.2);
+  doc.line(margin, y, W - margin, y);
+  y += 6;
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(7);
+  doc.setTextColor(160, 160, 160);
+  doc.text('Powered by ElevenLabs & Firecrawl', margin, y);
+  doc.text('killmystartup.vercel.app', W - margin, y, { align: 'right' });
+
+  doc.save(`autopsy-report-${Date.now()}.pdf`);
+}
+
 export default function App() {
   const { appState, connecting, turns, startSession, endSession, error } = useAppConversation();
 
@@ -18,6 +132,8 @@ export default function App() {
     if (appState === 'idle') startSession();
     else endSession();
   };
+
+  const showDownload = appState === 'idle' && turns.length > 0;
 
   return (
     <div
@@ -32,17 +148,28 @@ export default function App() {
         <div className="flex-1 flex flex-col items-center justify-center gap-20 -mt-16">
           <Orb state={appState} />
 
-          <button
-            onClick={handleClick}
-            disabled={connecting}
-            className={`kill-button ${
-              connecting ? "opacity-50 cursor-not-allowed" :
-              appState === "listening" || appState === "searching" ? "kill-button--listening" :
-              appState === "roasting" ? "kill-button--roasting" : ""
-            }`}
-          >
-            {connecting ? "Connecting..." : stateLabels[appState]}
-          </button>
+          <div className="flex flex-col items-center gap-4">
+            <button
+              onClick={handleClick}
+              disabled={connecting}
+              className={`kill-button ${
+                connecting ? "opacity-50 cursor-not-allowed" :
+                appState === "listening" || appState === "searching" ? "kill-button--listening" :
+                appState === "roasting" ? "kill-button--roasting" : ""
+              }`}
+            >
+              {connecting ? "Connecting..." : stateLabels[appState]}
+            </button>
+
+            {showDownload && (
+              <button
+                onClick={() => downloadReport(turns)}
+                className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80 font-mono hover:text-foreground transition-colors duration-200"
+              >
+                Download Autopsy Report
+              </button>
+            )}
+          </div>
 
           {error && (
             <p className="text-[11px] text-red-400/70 font-mono text-center max-w-xs">
