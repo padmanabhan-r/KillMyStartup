@@ -6,6 +6,11 @@ export interface Source {
   description: string;
 }
 
+export interface Turn {
+  idea: string;
+  sources: Source[];
+}
+
 export function parseSources(raw: string): Source[] {
   return raw
     .split(',')
