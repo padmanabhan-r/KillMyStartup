@@ -1,31 +1,90 @@
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 3.1%;
+    --foreground: 0 0% 75%;
+
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 70%;
+
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 75%;
+
+    --primary: 0 0% 85%;
+    --primary-foreground: 0 0% 3.1%;
+
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 60%;
+
+    --muted: 0 0% 8%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 0 0% 12%;
+    --accent-foreground: 0 0% 75%;
+
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 95%;
+
+    --border: 0 0% 12%;
+    --input: 0 0% 12%;
+    --ring: 0 0% 30%;
+
+    --radius: 0px;
+
+    --kill-black: 0 0% 3.1%;
+    --kill-dim: 0 0% 18%;
+    --kill-white: 0 0% 85%;
+    --kill-amber: 38 80% 55%;
+    --kill-red: 0 72% 45%;
+    --kill-red-deep: 0 60% 12%;
+    --kill-glow: 0 0% 100%;
+  }
 }
 
-:root {
-  --bg: #080808;
-  --text: #ffffff;
-  --text-dim: rgba(255, 255, 255, 0.4);
-  --text-dimmer: rgba(255, 255, 255, 0.2);
-  --border: rgba(255, 255, 255, 0.08);
+@layer base {
+  * {
+    @apply border-border;
+  }
 
-  --color-idle: rgba(255, 255, 255, 0.9);
-  --color-listening: #ffffff;
-  --color-searching: #f59e0b;
-  --color-roasting: #ef4444;
+  html, body, #root {
+    height: 100%;
+    width: 100%;
+  }
 
-  font-family: system-ui, -apple-system, sans-serif;
-  -webkit-font-smoothing: antialiased;
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+  }
 }
 
-html, body, #root {
-  height: 100%;
-  width: 100%;
-}
+@layer components {
+  .kill-button {
+    @apply relative uppercase tracking-[0.25em] text-xs font-medium px-10 py-4 border border-muted-foreground/50 bg-transparent text-foreground transition-all duration-300;
+    font-family: 'JetBrains Mono', monospace;
+  }
 
-body {
-  background: var(--bg);
-  color: var(--text);
+  .kill-button:hover {
+    @apply border-foreground/70 text-primary;
+  }
+
+  .kill-button:active {
+    transform: scale(0.97);
+  }
+
+  .kill-button--listening {
+    @apply border-white/30 text-white/80;
+    box-shadow: 0 0 30px hsla(0, 0%, 100%, 0.05);
+  }
+
+  .kill-button--roasting {
+    @apply border-red-500/30 text-red-400/80;
+    box-shadow: 0 0 40px hsla(0, 72%, 45%, 0.1);
+  }
 }
