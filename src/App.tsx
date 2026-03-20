@@ -28,15 +28,8 @@ export default function App() {
     >
       {/* Left panel */}
       <div className="flex-1 flex flex-col relative min-w-0">
-        {/* Watermark */}
-        <div className="absolute top-6 left-6 z-10">
-          <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/30 font-mono select-none">
-            KillMyStartup
-          </span>
-        </div>
-
         {/* Center — Orb + Button */}
-        <div className="flex-1 flex flex-col items-center justify-center gap-20">
+        <div className="flex-1 flex flex-col items-center justify-center gap-20 -mt-16">
           <Orb state={appState} />
 
           <button
@@ -57,7 +50,11 @@ export default function App() {
         </div>
 
         {/* Footer */}
-        <div className="absolute bottom-6 left-6">
+        <div className="absolute bottom-6 left-6 flex items-center gap-3">
+          <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/70 font-mono select-none">
+            KillMyStartup
+          </span>
+          <span className="text-muted-foreground/30 font-mono text-[10px]">|</span>
           <PoweredBy />
         </div>
       </div>
