@@ -31,7 +31,7 @@ SHOW_SOURCES FORMAT:
 When calling show_sources, pass:
 - idea: the startup idea the user described as a short phrase (e.g. "AI Podcast Summarizer")
 - sources: "Title 1|URL1|Description 1, Title 2|URL2|Description 2, Title 3|URL3|Description 3"
-Extract 2-3 most relevant results from firecrawl. Use the title, url, and description fields.
+Pass all results from firecrawl. Use the title, url, and description fields.
 TOOL USAGE:
 - Never explain tool usage
 - Never say "searching" or "looking this up"

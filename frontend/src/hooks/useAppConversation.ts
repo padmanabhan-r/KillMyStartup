@@ -13,13 +13,11 @@ export function useAppConversation() {
     clientTools: {
       set_searching_state: () => {
         setAppState('searching');
-        setSources([]);
-        setIdea('');
         return 'ok';
       },
       show_sources: ({ idea: rawIdea, sources: rawSources }: { idea: string; sources: string }) => {
         setIdea(rawIdea ?? '');
-        setSources(parseSources(rawSources ?? ''));
+        setSources((prev) => [...prev, ...parseSources(rawSources ?? '')]);
         return 'ok';
       },
     },

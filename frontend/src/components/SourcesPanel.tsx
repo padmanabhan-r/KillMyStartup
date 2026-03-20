@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Source } from '../types';
@@ -11,6 +11,12 @@ interface Props {
 
 export function SourcesPanel({ sources, idea }: Props) {
   const [collapsed, setCollapsed] = useState(false);
+  const seenCountRef = useRef(0);
+  const seenCount = seenCountRef.current;
+
+  useEffect(() => {
+    seenCountRef.current = sources.length;
+  }, [sources.length]);
 
   if (sources.length === 0) return null;
 
@@ -49,35 +55,41 @@ export function SourcesPanel({ sources, idea }: Props) {
 
           {/* Sources */}
           <div className="space-y-1">
-            {sources.map((source, i) => (
-              <a
-                key={`${source.url}-${i}`}
-                href={source.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block p-3 border border-transparent hover:border-border hover:bg-accent/40 transition-all duration-200 group animate-fade-in-up"
-                style={{ animationDelay: `${i * 80}ms` }}
-              >
-                <div className="flex items-center gap-2 mb-1.5">
-                  <img
-                    src={`https://www.google.com/s2/favicons?domain=${source.url}&sz=32`}
-                    alt=""
-                    className="w-3.5 h-3.5 opacity-50 group-hover:opacity-70"
-                  />
-                  <span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-mono">
-                    {getDomain(source.url)}
-                  </span>
-                </div>
-                <p className="text-xs text-foreground leading-relaxed mb-1 font-mono">
-                  {source.title}
-                </p>
-                {source.description && (
-                  <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2">
-                    {source.description}
+            {sources.map((source, i) => {
+              const isNew = i >= seenCount;
+              return (
+                <a
+                  key={`${source.url}-${i}`}
+                  href={source.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    "block p-3 border border-transparent hover:border-border hover:bg-accent/40 transition-all duration-200 group",
+                    isNew && "animate-fade-in-up",
+                  )}
+                  style={isNew ? { animationDelay: `${(i - seenCount) * 80}ms` } : undefined}
+                >
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <img
+                      src={`https://www.google.com/s2/favicons?domain=${source.url}&sz=32`}
+                      alt=""
+                      className="w-3.5 h-3.5 opacity-50 group-hover:opacity-70"
+                    />
+                    <span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground font-mono">
+                      {getDomain(source.url)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-foreground leading-relaxed mb-1 font-mono">
+                    {source.title}
                   </p>
-                )}
-              </a>
-            ))}
+                  {source.description && (
+                    <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2">
+                      {source.description}
+                    </p>
+                  )}
+                </a>
+              );
+            })}
           </div>
         </div>
       )}
