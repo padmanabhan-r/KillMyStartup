@@ -36,7 +36,7 @@ Everything in this phase is done in the [ElevenLabs console](https://elevenlabs.
 2. Name it (e.g. `KillMyStartup`)
 3. **Voice:** pick something sharp and confident — `Charlie` or `Daniel` work well
 4. **TTS Model:** `eleven_flash_v2_5` (~75ms latency)
-5. **LLM:** `gpt-4o` or `claude-sonnet` — avoid Gemini Flash (unreliable tool calling)
+5. **LLM:** `gpt-4o`, `claude-sonnet`, or `gemini-2.5-flash`
 6. **Visibility:** Public — the frontend passes `agentId` directly, no signed URL needed in dev
 
 ### Step 1.2 — System Prompt
