@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { jsPDF } from 'jspdf';
 import { Orb } from './components/Orb';
 import { SourcesPanel } from './components/SourcesPanel';
@@ -127,10 +128,16 @@ function downloadReport(turns: Turn[]) {
 
 export default function App() {
   const { appState, connecting, turns, startSession, endSession, error } = useAppConversation();
+  const [panelCollapsed, setPanelCollapsed] = useState(false);
 
   const handleClick = () => {
-    if (appState === 'idle') startSession();
-    else endSession();
+    if (appState === 'idle') {
+      setPanelCollapsed(false);
+      startSession();
+    } else {
+      setPanelCollapsed(true);
+      endSession();
+    }
   };
 
   const showDownload = appState === 'idle' && turns.length > 0;
@@ -189,7 +196,7 @@ export default function App() {
       </div>
 
       {/* Right panel */}
-      <SourcesPanel turns={turns} />
+      <SourcesPanel turns={turns} collapsed={panelCollapsed} onCollapsedChange={setPanelCollapsed} />
     </div>
   );
 }

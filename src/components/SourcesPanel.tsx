@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Turn } from '../types';
@@ -6,16 +6,12 @@ import { getDomain } from '../types';
 
 interface Props {
   turns: Turn[];
+  collapsed: boolean;
+  onCollapsedChange: (v: boolean) => void;
 }
 
-export function SourcesPanel({ turns }: Props) {
-  const [collapsed, setCollapsed] = useState(false);
+export function SourcesPanel({ turns, collapsed, onCollapsedChange }: Props) {
   const bottomRef = useRef<HTMLDivElement>(null);
-
-  // Auto-expand when a new session's first turn arrives
-  useEffect(() => {
-    if (turns.length === 0) setCollapsed(false);
-  }, [turns.length]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -32,7 +28,7 @@ export function SourcesPanel({ turns }: Props) {
     >
       {/* Toggle button — outside overflow-hidden so it stays visible when collapsed */}
       <button
-        onClick={() => setCollapsed(!collapsed)}
+        onClick={() => onCollapsedChange(!collapsed)}
         className="absolute top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-5 h-12 bg-secondary/80 border border-border transition-all duration-200 hover:bg-accent -left-5"
         style={{ borderRadius: 0 }}
       >
