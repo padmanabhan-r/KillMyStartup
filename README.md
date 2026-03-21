@@ -1,22 +1,44 @@
+![KillMyStartup](images/Home%20Page.png)
+
 # KillMyStartup
 
-> Tell me your startup idea. I'll tell you why it's already dead.
+> Your idea isn't special. It's probably already dead. Let's confirm that together.
 
-A voice-native AI that brutally roasts startup ideas in real-time using live web data. Speak your idea — the agent searches the internet for your competitors, past failures, and market saturation, then interrupts you with a data-backed roast.
+**KillMyStartup** is an antagonistic voice AI that plays devil's advocate — brutally, and with receipts.
 
-Built for [ElevenHacks](https://elevenlabs.io) using **ElevenAgents** + **Firecrawl Search**.
+Speak your startup idea. It searches the live web for every competitor you missed, every similar product that already failed, and every reason your market is a graveyard. Then it tells you — out loud, without flinching.
+
+Recognising a dead end saves you time, money, and the inevitable failure you'd have gotten to anyway. Think of it as the co-founder who actually tells you the truth.
+
+Built for [ElevenHacks](https://elevenlabs.io) using **[ElevenAgents](https://elevenlabs.io/docs/agents-platform/overview)** + **[Firecrawl Search](https://docs.firecrawl.dev)**.
+
+🔗 **[killmystartup.today](https://killmystartup.today)**
 
 ---
 
 ## How it works
 
-1. User speaks a startup idea into the browser
-2. ElevenAgents detects the idea and calls Firecrawl Search — live web + news results
-3. The agent's LLM synthesizes a brutal, fact-based roast from the search results
-4. ElevenAgents speaks the roast back in a sharp, confident voice
-5. The UI visualises each phase: white (listening) → amber (searching) → red (roasting)
+1. Hit **Kill My Startup** — grant mic access
+2. Describe your idea out loud
+3. [ElevenAgents](https://elevenlabs.io/docs/agents-platform/overview) picks it up via STT and instantly calls [Firecrawl Search](https://docs.firecrawl.dev) — live web + news results, no caching
+4. The LLM synthesises a data-backed roast from real search results — named competitors, real failures, market realities
+5. ElevenAgents speaks the verdict back in a sharp, surgical voice
+6. An autopsy report of every source surfaces in the right panel — downloadable as a PDF
 
-No backend. ElevenAgents owns the full loop: STT → tool calls → synthesis → TTS.
+No backend. ElevenAgents owns the full loop: **STT → tool calls → LLM synthesis → TTS**. The frontend is a pure React app.
+
+---
+
+## UI States
+
+The orb visualises exactly what's happening:
+
+| State | Orb | Trigger |
+|-------|-----|---------|
+| Idle | Dark, still | Session not started |
+| Listening | White, slow pulse | Connected — waiting for your pitch |
+| Searching | Amber, rotating ring | Firecrawl searching the web live |
+| Roasting | Red, fast pulse | Agent speaking the verdict |
 
 ---
 
@@ -24,56 +46,10 @@ No backend. ElevenAgents owns the full loop: STT → tool calls → synthesis �
 
 | Layer | Technology |
 |-------|------------|
-| Voice agent | ElevenAgents (STT + LLM + TTS + tool orchestration) |
-| Live web search | Firecrawl Search API (Server Tool inside ElevenAgents) |
+| Voice agent | [ElevenAgents](https://elevenlabs.io/docs/agents-platform/overview) — STT + LLM + TTS + tool orchestration |
+| Live web search | [Firecrawl Search API](https://docs.firecrawl.dev) — Server Tool inside ElevenAgents |
 | Frontend | Vite + React + TypeScript |
 | Deployment | Vercel |
-
----
-
-## Project Structure
-
-```
-KillMyStartup/
-├── frontend/               # Vite React app — the entire product
-│   ├── src/
-│   │   ├── App.tsx
-│   │   ├── components/
-│   │   │   └── Orb.tsx     # Animated state visualiser
-│   │   └── hooks/
-│   │       └── useAppConversation.ts   # ElevenLabs SDK + state machine
-│   └── .env.local          # VITE_ELEVENLABS_AGENT_ID
-└── implementation/
-    └── PLAN.md             # Full step-by-step build plan
-```
-
----
-
-## Local Development
-
-### Prerequisites
-
-- Node.js 18+
-- An ElevenLabs account with an agent configured (see `implementation/PLAN.md`)
-
-### Setup
-
-```bash
-cd frontend
-npm install
-```
-
-Create `frontend/.env.local`:
-```env
-VITE_ELEVENLABS_AGENT_ID=your_agent_id_here
-```
-
-### Run
-
-```bash
-npm run dev
-# Opens on http://localhost:5173
-```
 
 ---
 
@@ -85,23 +61,106 @@ The agent is configured entirely in the ElevenLabs console — no backend code r
 
 | Tool | Type | Purpose |
 |------|------|---------|
-| `set_searching_state` | Client Tool | Triggers the amber/searching UI state in the frontend |
-| `firecrawl_search` | Server Tool | Calls `https://api.firecrawl.dev/v2/search` directly — live web + news results |
+| `set_searching_state` | Client Tool | Signals the frontend to transition to the amber searching state |
+| `firecrawl_search` | Server Tool (Webhook) | Calls `https://api.firecrawl.dev/v2/search` directly — returns live web + news results |
 
-Full configuration details in [`implementation/PLAN.md`](implementation/PLAN.md).
+### `firecrawl_search` — Server Tool
+
+| Field | Value |
+|-------|-------|
+| URL | `https://api.firecrawl.dev/v2/search` |
+| Method | `POST` |
+| Auth header | `Authorization: Bearer <your_firecrawl_key>` (console secret) |
+| `query` | LLM Prompt — the agent constructs a targeted search query |
+| `limit` | Static: `5` |
+| `sources` | Static: `["web", "news"]` |
+| Wait for response | ON |
+
+### `set_searching_state` — Client Tool
+
+No parameters. When the agent calls this, the frontend transitions to the amber searching state. Handled in `useAppConversation.ts`.
 
 ---
 
-## Deployment
+## Local Development
 
-Frontend deploys to Vercel:
+### Prerequisites
+
+- Node.js 18+
+- ElevenLabs account with the agent configured as above
+- Firecrawl API key (added as a secret in the ElevenLabs console)
+
+### Setup
 
 ```bash
-cd frontend
-vercel
+npm install
 ```
 
-Set `VITE_ELEVENLABS_AGENT_ID` in Vercel's environment variables dashboard.
+Create `.env.local` at the project root:
+
+```env
+ELEVENLABS_API_KEY=your_elevenlabs_api_key
+ELEVENLABS_AGENT_ID=your_agent_id
+```
+
+### Run
+
+```bash
+npm run dev
+# http://localhost:5173
+```
+
+The Vite dev server includes a middleware that proxies signed URL requests to ElevenLabs so your API key never touches the browser.
+
+### Build
+
+```bash
+npm run build   # outputs to dist/
+npm run preview # preview the production build locally
+```
+
+---
+
+## Deployment (Vercel)
+
+**Build settings** (auto-detected):
+- Framework: Vite
+- Build command: `npm run build`
+- Output directory: `dist`
+- Root directory: `/`
+
+**Environment variables** (Settings → Environment Variables):
+- `ELEVENLABS_API_KEY`
+- `ELEVENLABS_AGENT_ID`
+
+The `api/signed-url.ts` Edge function is picked up automatically from the `api/` folder.
+
+---
+
+## Project Structure
+
+```
+KillMyStartup/
+├── src/
+│   ├── App.tsx                        # Root component — wires hook to UI
+│   ├── types.ts                       # AppState, Turn, Source types
+│   ├── components/
+│   │   ├── Orb.tsx                    # 4-state animated orb
+│   │   ├── SourcesPanel.tsx           # Right panel — sources per turn, collapsible
+│   │   └── PoweredBy.tsx              # Footer attribution
+│   └── hooks/
+│       └── useAppConversation.ts      # ElevenLabs SDK wrapper + state machine
+├── api/
+│   └── signed-url.ts                  # Vercel Edge function — signs ElevenLabs session URLs
+├── public/
+│   └── favicon.svg                    # Orb favicon
+├── images/
+│   └── Home Page.png
+├── prompts/
+│   └── AGENT_SYSTEM_PROMPT.md         # Agent system prompt (paste into ElevenLabs console)
+└── notes/
+    └── PLAN.md                        # Full implementation plan
+```
 
 ---
 
@@ -110,3 +169,4 @@ Set `VITE_ELEVENLABS_AGENT_ID` in Vercel's environment variables dashboard.
 - [ElevenAgents](https://elevenlabs.io/docs/agents-platform/overview) — conversational voice agent platform
 - [Firecrawl Search](https://docs.firecrawl.dev) — live web search API
 - [@elevenlabs/react](https://www.npmjs.com/package/@elevenlabs/react) — React SDK for ElevenAgents
+- [jsPDF](https://github.com/parallax/jsPDF) — PDF generation for the autopsy report
