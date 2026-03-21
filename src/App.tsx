@@ -165,7 +165,7 @@ export default function App() {
         {showHelp && (
           <div className="absolute top-14 left-6 z-20 w-72 border border-border bg-[hsl(0,0%,4%)] p-5 animate-fade-in-up">
             <p className="text-[11px] text-muted-foreground leading-relaxed mb-2">Think you've got the next big thing?</p>
-            <p className="text-[11px] text-muted-foreground leading-relaxed mb-2">KillMyStartup searches the web as you pitch — surfacing competitors, failed clones, and market realities in real-time. Then delivers the verdict.</p>
+            <p className="text-[11px] text-muted-foreground leading-relaxed mb-2">KillMyStartup is an antagonistic AI that searches the web as you pitch — surfacing competitors, failed clones, and market realities in real-time. Then delivers the verdict.</p>
             <p className="text-[11px] text-muted-foreground leading-relaxed mb-4">A dead end found early saves you everything.</p>
             <div className="h-px bg-border mb-4" />
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-mono mb-4">How it works</p>
