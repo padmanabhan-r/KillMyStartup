@@ -155,7 +155,7 @@ export default function App() {
         {/* Help button */}
         <button
           onClick={() => setShowHelp((v) => !v)}
-          className="absolute top-6 right-6 z-20 w-8 h-8 flex items-center justify-center border border-muted-foreground/40 text-muted-foreground hover:text-foreground hover:border-muted-foreground font-mono text-sm transition-colors duration-200"
+          className="absolute top-6 left-6 z-20 w-8 h-8 flex items-center justify-center border border-muted-foreground/40 text-muted-foreground hover:text-foreground hover:border-muted-foreground font-mono text-sm transition-colors duration-200"
           style={{ borderRadius: 0 }}
         >
           ?
@@ -163,7 +163,7 @@ export default function App() {
 
         {/* Help panel */}
         {showHelp && (
-          <div className="absolute top-14 right-6 z-20 w-72 border border-border bg-[hsl(0,0%,4%)] p-5 animate-fade-in-up">
+          <div className="absolute top-14 left-6 z-20 w-72 border border-border bg-[hsl(0,0%,4%)] p-5 animate-fade-in-up">
             <p className="text-[11px] text-muted-foreground leading-relaxed mb-4">An antagonistic AI that searches the live web as you speak — citing real competitors and past failures in real-time, then delivers the verdict.</p>
             <div className="h-px bg-border mb-4" />
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-mono mb-4">How it works</p>
