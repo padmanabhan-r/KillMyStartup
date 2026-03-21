@@ -164,7 +164,6 @@ export default function App() {
         {/* Help panel */}
         {showHelp && (
           <div className="absolute top-14 right-6 z-20 w-72 border border-border bg-[hsl(0,0%,4%)] p-5 animate-fade-in-up">
-            <p className="text-sm text-foreground font-mono mb-1">Pitch your idea. We'll kill it.</p>
             <p className="text-[11px] text-muted-foreground leading-relaxed mb-4">An antagonistic AI that searches the live web as you speak — citing real competitors and past failures in real-time, then delivers the verdict.</p>
             <div className="h-px bg-border mb-4" />
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-mono mb-4">How it works</p>
