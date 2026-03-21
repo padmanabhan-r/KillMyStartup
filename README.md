@@ -1,4 +1,4 @@
-![KillMyStartup](images/Home%20Page.png)
+![KillMyStartup](images/Cover%20Page.jpg)
 
 # KillMyStartup
 
@@ -27,6 +27,12 @@ The orb tells you where you are:
 - **Red** — verdict incoming
 
 Sources appear in the right panel as they're found. After the session, download the full **Autopsy Report** as a PDF.
+
+![Talking Screen 1](images/Talking%20Screen%201.png)
+
+![Talking Screen 2](images/Talking%20Screen%202.png)
+
+![Autopsy Report](images/Autopsy%20Report.png)
 
 ---
 
