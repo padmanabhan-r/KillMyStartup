@@ -35,7 +35,7 @@ Sources appear in the right panel as they're found. After the session, download 
 | | |
 |---|---|
 | **[ElevenAgents](https://elevenlabs.io/docs/agents-platform/overview)** | Handles everything voice — speech-to-text, LLM, text-to-speech, and tool orchestration. No separate backend. |
-| **[Firecrawl Search](https://docs.firecrawl.dev)** | Registered as a Server Tool directly inside ElevenAgents. The agent calls it live during every conversation — real results, not cached. |
+| **[Firecrawl Search](https://docs.firecrawl.dev/features/search)** | Registered as a Server Tool directly inside ElevenAgents. The agent calls it live during every conversation — real results, not cached. |
 | **Vite + React + TypeScript** | Frontend, deployed to Vercel. |
 
 ---
