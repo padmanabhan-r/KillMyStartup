@@ -155,7 +155,7 @@ export default function App() {
         {/* Help button */}
         <button
           onClick={() => setShowHelp((v) => !v)}
-          className="absolute top-6 right-6 z-20 w-6 h-6 flex items-center justify-center border border-border text-muted-foreground/50 hover:text-muted-foreground font-mono text-[11px] transition-colors duration-200"
+          className="absolute top-6 right-6 z-20 w-8 h-8 flex items-center justify-center border border-muted-foreground/40 text-muted-foreground hover:text-foreground hover:border-muted-foreground font-mono text-sm transition-colors duration-200"
           style={{ borderRadius: 0 }}
         >
           ?
