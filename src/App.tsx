@@ -129,6 +129,7 @@ function downloadReport(turns: Turn[]) {
 export default function App() {
   const { appState, connecting, turns, startSession, endSession, error } = useAppConversation();
   const [panelCollapsed, setPanelCollapsed] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   const handleClick = () => {
     if (appState === 'idle') {
@@ -151,6 +152,36 @@ export default function App() {
     >
       {/* Left panel */}
       <div className="flex-1 flex flex-col relative min-w-0">
+        {/* Help button */}
+        <button
+          onClick={() => setShowHelp((v) => !v)}
+          className="absolute top-6 right-6 z-20 w-6 h-6 flex items-center justify-center border border-border text-muted-foreground/50 hover:text-muted-foreground font-mono text-[11px] transition-colors duration-200"
+          style={{ borderRadius: 0 }}
+        >
+          ?
+        </button>
+
+        {/* Help panel */}
+        {showHelp && (
+          <div className="absolute top-14 right-6 z-20 w-72 border border-border bg-[hsl(0,0%,4%)] p-5 animate-fade-in-up">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-mono mb-4">How it works</p>
+            <ul className="space-y-3">
+              {[
+                "Hit Kill My Startup and allow mic access.",
+                "Pitch your idea out loud — the AI listens in real-time.",
+                "As you speak, it searches the live web for competitors, failed clones, and market reality.",
+                "Sources are cited in the right panel as it finds them.",
+                "Then it tells you exactly why you're cooked.",
+                "Download the Autopsy Report when you're done.",
+              ].map((step, i) => (
+                <li key={i} className="flex gap-3">
+                  <span className="text-[10px] font-mono text-muted-foreground/40 mt-0.5 shrink-0">{i + 1}.</span>
+                  <span className="text-[11px] text-muted-foreground leading-relaxed">{step}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         {/* Center — Orb + Button */}
         <div className="flex-1 flex flex-col items-center justify-center gap-20 -mt-16">
           <Orb state={appState} />
