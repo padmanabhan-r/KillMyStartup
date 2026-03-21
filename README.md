@@ -28,11 +28,17 @@ The orb tells you where you are:
 
 Sources appear in the right panel as they're found. After the session, download the full **Autopsy Report** as a PDF.
 
-![Talking Screen 1](images/Talking%20Screen%201.png)
+### Screenshots
 
-![Talking Screen 2](images/Talking%20Screen%202.png)
+**In conversation**
 
-![Autopsy Report](images/Autopsy%20Report.png)
+<img src="images/Talking%20Screen%201.png" width="600" />
+
+<img src="images/Talking%20Screen%202.png" width="600" />
+
+**Autopsy Report**
+
+<img src="images/Autopsy%20Report.png" width="600" />
 
 ---
 
