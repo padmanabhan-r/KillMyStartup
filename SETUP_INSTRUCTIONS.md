@@ -175,46 +175,6 @@ The Vite dev server includes a middleware that proxies signed URL requests to El
 
 ---
 
-## Phase 3 — Vercel Deployment
-
-### Step 3.1 — Deploy via Vercel console
-
-1. Go to [vercel.com](https://vercel.com) → **Add New Project** → import your GitHub repo
-2. Vercel auto-detects Vite. Verify:
-   - **Framework:** Vite
-   - **Build command:** `npm run build`
-   - **Output directory:** `dist`
-   - **Root directory:** `/` (project root)
-
-### Step 3.2 — Set environment variables
-
-In **Settings → Environment Variables**, add:
-
-| Name | Value |
-|------|-------|
-| `ELEVENLABS_API_KEY` | Your ElevenLabs API key |
-| `ELEVENLABS_AGENT_ID` | Your agent ID |
-
-Select **Production + Preview + Development** for both.
-
-### Step 3.3 — Custom domain
-
-In **Settings → Domains**, add your domain. DNS:
-- Add a `CNAME` record pointing to `cname.vercel-dns.com`
-- Or use Vercel nameservers for automatic setup
-
-The `api/signed-url.ts` Edge function at the project root is picked up automatically by Vercel — no extra configuration needed.
-
-### Step 3.4 — Production test
-
-1. Open your domain
-2. Click **Kill My Startup**, speak an idea
-3. Confirm: white → amber → red → white
-4. Confirm sources appear in the right panel in real-time
-5. Confirm PDF downloads cleanly after **I Quit**
-
----
-
 ## Project Structure
 
 ```
@@ -249,21 +209,3 @@ KillMyStartup/
 | `searching` | Amber, rotating ring | `set_searching_state` client tool fires |
 | `roasting` | Red, fast pulse | Agent speaking |
 
----
-
-## Common Issues
-
-**Tools not firing in ElevenLabs console**
-- Check the system prompt explicitly orders: `set_searching_state` → `firecrawl_search` → `show_sources` → speak
-- Tool descriptions must be directive, not descriptive
-
-**Firecrawl returning only one domain (e.g. all Crunchbase)**
-- Do not include publication names in the query — the LLM will anchor on them
-- Use natural queries: `"{idea} startup competitors funded"` not `"{idea} startup crunchbase"`
-
-**Sources panel not appearing after a second session**
-- This is handled — `show_sources` triggers auto-expand on new sessions
-
-**Mic permission denied**
-- Must be served over HTTPS in production (Vercel handles this)
-- In local dev, `localhost` is treated as secure by browsers
