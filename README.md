@@ -48,7 +48,7 @@ Sources appear in the right panel as they're found. After the session, download 
 
 **Autopsy Report**
 
-<img src="images/Autopsy%20Report.png" width="600" />
+<p align="center"><img src="images/Autopsy%20Report.png" width="400" /></p>
 
 ---
 
