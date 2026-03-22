@@ -36,7 +36,7 @@ Sources appear in the right panel as they're found. After the session, download 
 
 **Home**
 
-<img src="images/Home%20Page.png" width="600" />
+<p align="center"><img src="images/Home%20Page.png" width="600" /></p>
 
 **Listening / Searching**
 
