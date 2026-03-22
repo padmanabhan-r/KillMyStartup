@@ -249,21 +249,3 @@ KillMyStartup/
 | `searching` | Amber, rotating ring | `set_searching_state` client tool fires |
 | `roasting` | Red, fast pulse | Agent speaking |
 
----
-
-## Common Issues
-
-**Tools not firing in ElevenLabs console**
-- Check the system prompt explicitly orders: `set_searching_state` → `firecrawl_search` → `show_sources` → speak
-- Tool descriptions must be directive, not descriptive
-
-**Firecrawl returning only one domain (e.g. all Crunchbase)**
-- Do not include publication names in the query — the LLM will anchor on them
-- Use natural queries: `"{idea} startup competitors funded"` not `"{idea} startup crunchbase"`
-
-**Sources panel not appearing after a second session**
-- This is handled — `show_sources` triggers auto-expand on new sessions
-
-**Mic permission denied**
-- Must be served over HTTPS in production (Vercel handles this)
-- In local dev, `localhost` is treated as secure by browsers
