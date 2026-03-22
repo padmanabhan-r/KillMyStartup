@@ -12,6 +12,10 @@ Pitch your idea out loud. As you speak, it searches the live web in real-time, s
 
 Recognising a dead end early saves you time, money, and the slow-motion failure you'd have arrived at anyway.
 
+The UI is deliberately minimal and dark — no friendly colours, no encouragement, no softening. The experience is designed to feel unsettling, because this is not a tool that's rooting for you.
+
+The domain, **killmystartup.today**, is intentional too — a direct imperative. Not "should you?" or "maybe consider it." Kill your startup. Today.
+
 🔗 **[killmystartup.today](https://killmystartup.today)**
 
 ---
@@ -30,11 +34,17 @@ Sources appear in the right panel as they're found. After the session, download 
 
 ### Screenshots
 
-**In conversation**
+**Home**
 
-<img src="images/Talking%20Screen%201.png" width="600" />
+<img src="images/Home%20Page.png" width="600" />
 
-<img src="images/Talking%20Screen%202.png" width="600" />
+**Listening / Searching**
+
+<img src="images/White%20Orb.png" width="49%" /> <img src="images/Yellow%20Orb.png" width="49%" />
+
+**Verdict**
+
+<img src="images/Red%20Orb%201.png" width="49%" /> <img src="images/Red%20Orb%202.png" width="49%" />
 
 **Autopsy Report**
 
@@ -56,6 +66,3 @@ Sources appear in the right panel as they're found. After the session, download 
 
 → **[Full setup instructions](SETUP_INSTRUCTIONS.md)** — ElevenAgents config, Firecrawl wiring, local dev, and Vercel deployment.
 
----
-
-## Built for ElevenHacks
