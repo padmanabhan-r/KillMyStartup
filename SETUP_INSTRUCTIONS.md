@@ -182,21 +182,24 @@ The Vite dev server includes a middleware that proxies signed URL requests to El
 KillMyStartup/
 ├── src/
 │   ├── App.tsx                      # Root component
-│   ├── types.ts                     # AppState, Turn, Source types
+│   ├── types.ts                     # AppState, Turn, Source types + parseSources
+│   ├── index.css                    # Global styles
+│   ├── main.tsx                     # Entry point
+│   ├── assets/                      # Static assets
 │   ├── components/
 │   │   ├── Orb.tsx                  # 4-state animated orb
 │   │   ├── SourcesPanel.tsx         # Right panel — sources per turn, collapsible
 │   │   └── PoweredBy.tsx
-│   └── hooks/
-│       └── useAppConversation.ts    # ElevenLabs SDK wrapper + state machine
+│   ├── hooks/
+│   │   └── useAppConversation.ts    # ElevenLabs SDK wrapper + state machine
+│   └── lib/
+│       └── utils.ts                 # Utility functions
 ├── api/
 │   └── signed-url.ts               # Vercel Edge function — signs ElevenLabs session URLs
 ├── public/
 │   └── favicon.svg
-├── prompts/
-│   └── AGENT_SYSTEM_PROMPT.md      # Paste this into the ElevenLabs agent console
-└── notes/
-    └── PLAN.md                     # Original implementation plan
+└── prompts/
+    └── AGENT_SYSTEM_PROMPT.md      # Paste this into the ElevenLabs agent console
 ```
 
 ---
