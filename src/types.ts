@@ -13,7 +13,7 @@ export interface Turn {
 
 export function parseSources(raw: string): Source[] {
   return raw
-    .split(',')
+    .split(';;')
     .map((s) => {
       const parts = s.split('|').map((x) => x.trim());
       return {
