@@ -1,6 +1,6 @@
 # Setup Instructions
 
-This document covers the full setup from scratch — ElevenAgents configuration, Firecrawl wiring, local development, and Vercel deployment.
+This document covers the full setup from scratch — ElevenAgents configuration, Firecrawl wiring, and local development.
 
 ---
 
@@ -35,7 +35,7 @@ Everything in this phase is done in the [ElevenLabs console](https://elevenlabs.
 1. Go to **elevenlabs.io/app/agents** → **Create Agent**
 2. Name it (e.g. `KillMyStartup`)
 3. **Voice:** pick something sharp and confident — `Charlie` or `Daniel` work well
-4. **TTS Model:** `eleven_flash_v2_5` (~75ms latency)
+4. **TTS Model:** `eleven_flash_v2_5`
 5. **LLM:** `gpt-4o`, `claude-sonnet`, or `gemini-2.5-flash`
 6. **Visibility:** Public — the frontend passes `agentId` directly, no signed URL needed in dev
 
@@ -78,7 +78,7 @@ This is handled in the React frontend. When the agent calls it, the UI transitio
 | Name | Type | Description |
 |------|------|-------------|
 | `idea` | string | The startup idea as a short phrase, e.g. "AI Podcast Summarizer" |
-| `sources` | string | Pipe-and-comma formatted results: `"Title 1\|URL1\|Description 1, Title 2\|URL2\|Description 2, ..."` |
+| `sources` | string | Pipe-and-double-semicolon formatted results: `"Title 1\|URL1\|Description 1;;Title 2\|URL2\|Description 2;;..."` |
 
 This is also handled in the React frontend — it parses the sources string and appends a new turn to the right panel.
 
@@ -105,10 +105,11 @@ This is also handled in the React frontend — it parses the sources string and 
 | Name | Type | Value type | Required | Description |
 |------|------|------------|----------|-------------|
 | `query` | string | LLM Prompt | Yes | A short, natural search query — e.g. `"{idea} startup competitors funded"` |
-| `limit` | number | Static | No | `5` |
+| `limit` | number | Static | No | `3` |
 | `sources` | array | Static | No | `["web", "news"]` |
+| `tbs` | string | Static | No | `qdr:y` |
 
-> `limit` and `sources` are static so the LLM only needs to construct the `query`.
+> `limit`, `sources`, and `tbs` are static so the LLM only needs to construct the `query`. `tbs: qdr:y` filters web results to the past 12 months.
 
 ### Step 1.6 — Test in ElevenLabs Console
 
