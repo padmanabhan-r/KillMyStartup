@@ -60,7 +60,7 @@ Firecrawl Search is the backbone of the system — wired directly into ElevenAge
 The search is deliberately constrained:
 
 - **3 web + 3 news results** — enough evidence to land a devastating roast, not enough to overwhelm a conversational agent with context
-- **Past 12 months only** — stale data gives founders an out; fresh data doesn't
+- **Past 12 months, sorted newest first** — stale data gives founders an out; fresh data doesn't. Results are sorted by date so the most recent evidence surfaces first
 - **Three attack vectors** — every query targets one of: existing competitors, funding scale, or startups that already died doing this
 
 This isn't search bolted on. The tight context window is the design — a conversational agent performs best when given the right amount of information, not the most information.

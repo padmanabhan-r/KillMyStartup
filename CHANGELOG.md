@@ -19,6 +19,7 @@
 
 - **Web + news results** — `sources: ["web", "news"]` now always sent as a constant; previously the LLM was omitting it, returning web-only results
 - **Past 12 months only** — added `tbs: qdr:y` to filter web results to the last year; stale data gives founders an out, fresh data doesn't
+- **Sorted newest first** — added `sbd:1` to `tbs` so the most recent results surface first within the 12-month window
 - **Tighter context** — `limit` reduced from 5 to 3; returns 3 web + 3 news = 6 results, enough to land a roast without overloading a conversational agent
 
 ### Bug fixes

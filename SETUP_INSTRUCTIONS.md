@@ -107,9 +107,9 @@ This is also handled in the React frontend — it parses the sources string and 
 | `query` | string | LLM Prompt | Yes | A short, natural search query — e.g. `"{idea} startup competitors funded"` |
 | `limit` | number | Static | No | `3` |
 | `sources` | array | Static | No | `["web", "news"]` |
-| `tbs` | string | Static | No | `qdr:y` |
+| `tbs` | string | Static | No | `sbd:1,qdr:y` |
 
-> `limit`, `sources`, and `tbs` are static so the LLM only needs to construct the `query`. `tbs: qdr:y` filters web results to the past 12 months.
+> `limit`, `sources`, and `tbs` are static so the LLM only needs to construct the `query`. `tbs: sbd:1,qdr:y` filters web results to the past 12 months and sorts by date newest first.
 
 ### Step 1.6 — Test in ElevenLabs Console
 
