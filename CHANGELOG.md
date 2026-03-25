@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.1.1 — 2026-03-25
+
+### Agent guardrails
+
+- Added system prompt rule preventing the agent from admitting data limitations or pivoting into deep-dive source research when asked — it stays in critic mode, not research-assistant mode
+
+### Docs
+
+- README design decisions expanded: why Firecrawl Search (not scrape/crawl) is the centrepiece — real-time knowledge argument, investor-critic framing, latency rationale
+- SETUP_INSTRUCTIONS project structure section corrected to match actual file layout
+
+---
+
 ## v1.1.0 — 2026-03-24
 
 ### Search improvements
