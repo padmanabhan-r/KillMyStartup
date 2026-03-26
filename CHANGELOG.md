@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.1.3 — 2026-03-26
+
+### Bug fixes
+
+- Fixed source URLs with pipe characters in their titles redirecting to a broken URL instead of the correct page
+
+---
+
 ## v1.1.2 — 2026-03-26
 
 ### Agent guardrails
