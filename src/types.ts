@@ -16,14 +16,14 @@ export function parseSources(raw: string): Source[] {
     .split(';;')
     .map((s) => {
       const parts = s.split('|').map((x) => x.trim());
-      const url = parts[1] ?? '';
-      return {
-        title: parts[0] ?? '',
-        url: url && !url.startsWith('http') ? `https://${url}` : url,
-        description: parts[2] ?? '',
-      };
+      const urlIndex = parts.findIndex((p) => p.startsWith('http'));
+      if (urlIndex === -1) return null;
+      const url = parts[urlIndex];
+      const title = parts.slice(0, urlIndex).join('|').trim() || (parts[0] ?? '');
+      const description = parts.slice(urlIndex + 1).join('|').trim();
+      return { title, url, description };
     })
-    .filter((s) => s.title && s.url);
+    .filter((s): s is Source => s !== null && !!s.title && !!s.url);
 }
 
 export function getDomain(url: string): string {
