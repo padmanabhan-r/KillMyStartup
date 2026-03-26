@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.1.2 — 2026-03-26
+
+### Agent guardrails
+
+- Tightened guardrails even further to never break out of character
+
+---
+
 ## v1.1.1 — 2026-03-25
 
 ### Agent guardrails
