@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.1.4 — 2026-03-26
+
+### Search improvements
+
+- Removed `sbd:1` from `tbs` — sorting by date was surfacing irrelevant recent noise; relevance ranking now applies within the 12-month window (`qdr:y` only)
+
+---
+
 ## v1.1.3 — 2026-03-26
 
 ### Bug fixes
