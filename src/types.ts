@@ -16,9 +16,10 @@ export function parseSources(raw: string): Source[] {
     .split(';;')
     .map((s) => {
       const parts = s.split('|').map((x) => x.trim());
+      const url = parts[1] ?? '';
       return {
         title: parts[0] ?? '',
-        url: parts[1] ?? '',
+        url: url && !url.startsWith('http') ? `https://${url}` : url,
         description: parts[2] ?? '',
       };
     })
