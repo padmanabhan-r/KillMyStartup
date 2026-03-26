@@ -59,7 +59,7 @@ Firecrawl Search is the backbone of the system — wired directly into ElevenAge
 
 The search is deliberately constrained:
 
-- **3 web + 3 news results** — enough evidence to land a devastating roast, not enough to overwhelm a conversational agent with context
+- **3 web + 3 news results** — enough evidence to land a devastating verdict, not enough to overwhelm a conversational agent with context
 - **Past 12 months, sorted newest first** — stale data gives founders an out; fresh data doesn't. Results are sorted by date so the most recent evidence surfaces first
 - **Three attack vectors** — every query targets one of: existing competitors, funding scale, or startups that already died doing this
 
@@ -70,14 +70,14 @@ This isn't search bolted on. The tight context window is the design — a conver
 ## Hackathon design decisions
 
 **Why Firecrawl changes everything here**
-Any voice agent can roast you. Tell it to be harsh, give it a persona, and it'll tear apart any idea you throw at it — entirely from training data. That's not this. The difference is that founders are exceptionally good at dismissing opinions. "You don't understand the market." "That competitor is different." "The timing is right now." An opinion-based roast gives them an exit. Evidence doesn't. The moment the agent pulls a live result — a funded competitor, a recent shutdown, a news article from this week — and throws it back at you, there's no exit. Firecrawl turns a roast into a reckoning. That's the specific use case where instant search delivers high impact: not to inform, but to remove the founder's ability to look away. The research they were avoiding shows up whether they wanted it to or not.
+Any voice agent can tear you apart. Tell it to be harsh, give it a persona, and it'll dismantle any idea you throw at it — entirely from training data. That's not this. The difference is that founders are exceptionally good at dismissing opinions. "You don't understand the market." "That competitor is different." "The timing is right now." An opinion-based critique gives them an exit. Evidence doesn't. The moment the agent pulls a live result — a funded competitor, a recent shutdown, a news article from this week — and throws it back at you, there's no exit. Firecrawl turns a critique into a reckoning. That's the specific use case where instant search delivers high impact: not to inform, but to remove the founder's ability to look away. The research they were avoiding shows up whether they wanted it to or not.
 
 **Why Firecrawl Search — and not scrape or crawl?**
 The hackathon rules specify Firecrawl Search. I didn't bolt it on to comply — I built the entire product around it.
 
 Tech moves fast. A competitor can raise a round, launch, or shut down between a founder's last Google search and today. Live search doesn't go stale. The moment someone pitches, the agent is searching right now, pulling signals from this week.
 
-Deep-diving those results is the founder's job, not the agent's. The agent is an investor-style critic — its job is to tell you why you'll fail, not to do your competitive analysis for you. Search already returns distilled, relevant signals. That's enough to say "someone already shipped this six months ago." More context doesn't mean a better roast. It means a slower one.
+Deep-diving those results is the founder's job, not the agent's. The agent is an investor-style critic — its job is to tell you why you'll fail, not to do your competitive analysis for you. Search already returns distilled, relevant signals. That's enough to say "someone already shipped this six months ago." More context doesn't mean a better verdict. It means a slower one.
 
 **Why Flash TTS over V3 Conversational?**
 V3 has an Expressive mode that sounds more dynamic but sometimes leaked control tokens into speech during testing. Flash is clean, low latency, and consistent — for a product where delivery is everything, reliability isn't optional.
