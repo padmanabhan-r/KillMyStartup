@@ -3,6 +3,7 @@ import { jsPDF } from 'jspdf';
 import { Orb } from './components/Orb';
 import { SourcesPanel } from './components/SourcesPanel';
 import { PoweredBy } from './components/PoweredBy';
+import { AndroidBanner } from './components/AndroidBanner';
 import { useAppConversation } from './hooks/useAppConversation';
 import type { AppState, Turn } from './types';
 
@@ -219,6 +220,8 @@ export default function App() {
             </p>
           )}
         </div>
+
+        <AndroidBanner />
 
         {/* Footer */}
         <div className="absolute bottom-6 left-6 flex items-center gap-3">
