@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useConversation } from '@elevenlabs/react';
-import type { AppState, Turn } from '../types';
+import type { AppState, Turn, TranscriptEntry } from '../types';
 import { parseSources } from '../types';
 
 export function useAppConversation() {
   const [appState, setAppState] = useState<AppState>('idle');
   const [connecting, setConnecting] = useState<boolean>(false);
   const [turns, setTurns] = useState<Turn[]>([]);
+  const [transcript, setTranscript] = useState<TranscriptEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const conversation = useConversation({
@@ -19,6 +20,12 @@ export function useAppConversation() {
         setTurns((prev) => [...prev, { idea: rawIdea ?? '', sources: parseSources(rawSources ?? '') }]);
         return 'ok';
       },
+    },
+    onMessage: ({ message, role }: { message: string; role: 'user' | 'agent' }) => {
+      // Fires for finalised user transcriptions and agent responses alike, in
+      // conversation order, which is exactly the order the transcript needs.
+      if (!message) return;
+      setTranscript((prev) => [...prev, { role, message }]);
     },
     onModeChange: ({ mode }: { mode: string }) => {
       if (mode === 'speaking') setAppState('roasting');
@@ -36,6 +43,7 @@ export function useAppConversation() {
   const startSession = async () => {
     setError(null);
     setTurns([]);
+    setTranscript([]);
     setConnecting(true);
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -66,5 +74,5 @@ export function useAppConversation() {
     setAppState('idle');
   };
 
-  return { appState, connecting, turns, startSession, endSession, error };
+  return { appState, connecting, turns, transcript, startSession, endSession, error };
 }

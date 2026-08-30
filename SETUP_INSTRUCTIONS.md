@@ -194,7 +194,7 @@ The Vite dev server includes a middleware that proxies signed URL requests to El
 
 ### Step 2.5 — Android (Capacitor) prerequisite
 
-The Autopsy Report is written to the device with the Capacitor **Filesystem**
+The Autopsy Report and Transcript are written to the device with the Capacitor **Filesystem**
 plugin. Install it in the Capacitor project that wraps this app:
 
 ```bash
@@ -226,7 +226,8 @@ KillMyStartup/
 │   │   └── useAppConversation.ts    # ElevenLabs SDK wrapper + state machine
 │   └── lib/
 │       ├── utils.ts                 # Utility functions
-│       └── savePdf.ts               # Writes the report to disk (native vs browser)
+│       ├── report.ts                # Autopsy Report + Transcript PDF generation
+│       └── savePdf.ts               # Writes a PDF to disk (native vs browser)
 ├── api/
 │   └── signed-url.ts               # Vercel Edge function — signs ElevenLabs session URLs
 ├── scripts/

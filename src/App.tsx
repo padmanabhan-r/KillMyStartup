@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { jsPDF } from 'jspdf';
 import { Orb } from './components/Orb';
 import { SourcesPanel } from './components/SourcesPanel';
 import { PoweredBy } from './components/PoweredBy';
 import { AndroidBanner } from './components/AndroidBanner';
 import { useAppConversation } from './hooks/useAppConversation';
-import { savePdf } from './lib/savePdf';
-import type { AppState, Turn } from './types';
+import { saveAutopsyReport, saveTranscript } from './lib/report';
+import type { SaveResult } from './lib/savePdf';
+import type { AppState } from './types';
 
 const stateLabels: Record<AppState, string> = {
   idle: "Kill My Startup",
@@ -15,121 +15,8 @@ const stateLabels: Record<AppState, string> = {
   roasting: "I Quit",
 };
 
-function downloadReport(turns: Turn[]) {
-  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-  const W = 210;
-  const margin = 20;
-  const contentW = W - margin * 2;
-  let y = 0;
-
-  const addPage = () => {
-    doc.addPage();
-    y = margin;
-  };
-
-  const checkY = (needed: number) => {
-    if (y + needed > 277) addPage();
-  };
-
-  // --- Dark header band ---
-  doc.setFillColor(8, 8, 8);
-  doc.rect(0, 0, W, 28, 'F');
-
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(7);
-  doc.setTextColor(120, 120, 120);
-  doc.text('KILLMYSTARTUP', margin, 11);
-
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(14);
-  doc.setTextColor(220, 220, 220);
-  doc.text('AUTOPSY REPORT', margin, 21);
-
-  const date = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(7);
-  doc.setTextColor(80, 80, 80);
-  doc.text(date, W - margin, 21, { align: 'right' });
-
-  y = 38;
-
-  turns.forEach((turn, turnIndex) => {
-    // Turn divider (except first)
-    if (turnIndex > 0) {
-      checkY(16);
-      doc.setDrawColor(220, 50, 50);
-      doc.setLineWidth(0.3);
-      doc.line(margin, y, W - margin, y);
-      y += 10;
-    }
-
-    // Idea title
-    checkY(14);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(13);
-    doc.setTextColor(30, 30, 30);
-    const ideaLines = doc.splitTextToSize(turn.idea, contentW);
-    doc.text(ideaLines, margin, y);
-    y += ideaLines.length * 6 + 6;
-
-    // Sources
-    turn.sources.forEach((source) => {
-      checkY(22);
-
-      // Source card background
-      doc.setFillColor(248, 248, 248);
-      doc.roundedRect(margin, y - 3, contentW, 22, 1, 1, 'F');
-
-      // Domain
-      let domain = source.url;
-      try { domain = new URL(source.url).hostname.replace('www.', ''); } catch { /* ignore */ }
-      doc.setFont('courier', 'normal');
-      doc.setFontSize(7);
-      doc.setTextColor(150, 50, 50);
-      doc.text(domain.toUpperCase(), margin + 3, y + 3);
-
-      // Title
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(9);
-      doc.setTextColor(30, 30, 30);
-      const titleLines = doc.splitTextToSize(source.title, contentW - 6);
-      doc.text(titleLines.slice(0, 2), margin + 3, y + 8);
-
-      // Description
-      if (source.description) {
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(8);
-        doc.setTextColor(100, 100, 100);
-        const descLines = doc.splitTextToSize(source.description, contentW - 6);
-        doc.text(descLines.slice(0, 2), margin + 3, y + 15);
-      }
-
-      // Clickable link
-      doc.link(margin, y - 3, contentW, 22, { url: source.url });
-
-      y += 26;
-    });
-
-    y += 4;
-  });
-
-  // Footer
-  checkY(12);
-  doc.setDrawColor(220, 220, 220);
-  doc.setLineWidth(0.2);
-  doc.line(margin, y, W - margin, y);
-  y += 6;
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(7);
-  doc.setTextColor(160, 160, 160);
-  doc.text('Powered by ElevenLabs & Firecrawl', margin, y);
-  doc.text('killmystartup.today', W - margin, y, { align: 'right' });
-
-  return savePdf(doc, `autopsy-report-${Date.now()}.pdf`);
-}
-
 export default function App() {
-  const { appState, connecting, turns, startSession, endSession, error } = useAppConversation();
+  const { appState, connecting, turns, transcript, startSession, endSession, error } = useAppConversation();
   const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [saveNote, setSaveNote] = useState<string | null>(null);
@@ -142,16 +29,16 @@ export default function App() {
     return () => clearTimeout(id);
   }, [saveNote]);
 
-  const handleDownload = async () => {
+  const handleSave = async (save: () => Promise<SaveResult>, label: string) => {
     try {
-      const result = await downloadReport(turns);
+      const result = await save();
       setSaveNote(
         result.kind === 'saved' ? `Saved to ${result.folder}`
-        : result.kind === 'unavailable' ? "Couldn't save the report on this device."
+        : result.kind === 'unavailable' ? `Couldn't save the ${label} on this device.`
         : null,
       );
     } catch {
-      setSaveNote("Couldn't save the report.");
+      setSaveNote(`Couldn't save the ${label}.`);
     }
   };
 
@@ -166,6 +53,7 @@ export default function App() {
   };
 
   const showDownload = appState === 'idle' && turns.length > 0;
+  const showTranscript = appState === 'idle' && transcript.length > 0;
 
   return (
     <div
@@ -229,10 +117,19 @@ export default function App() {
 
             {showDownload && (
               <button
-                onClick={handleDownload}
+                onClick={() => handleSave(() => saveAutopsyReport(turns), 'report')}
                 className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80 font-mono hover:text-foreground transition-colors duration-200"
               >
                 Download Autopsy Report
+              </button>
+            )}
+
+            {showTranscript && (
+              <button
+                onClick={() => handleSave(() => saveTranscript(transcript), 'transcript')}
+                className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80 font-mono hover:text-foreground transition-colors duration-200"
+              >
+                Download Full Transcript
               </button>
             )}
 

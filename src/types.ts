@@ -11,6 +11,13 @@ export interface Turn {
   sources: Source[];
 }
 
+// One line of the spoken conversation, in the order it was said. The agent's
+// tool calls are not messages and never appear here.
+export interface TranscriptEntry {
+  role: 'user' | 'agent';
+  message: string;
+}
+
 export function parseSources(raw: string): Source[] {
   return raw
     .split(';;')
