@@ -167,6 +167,9 @@ ELEVENLABS_API_KEY=your_elevenlabs_api_key
 ELEVENLABS_AGENT_ID=your_agent_id
 ```
 
+> Accounts and usage limits add more variables — see Phase 3. They are optional;
+> without them the app runs with no sign-in and no limits.
+
 Get the Agent ID from the ElevenLabs console — it's in the agent settings URL or the overview page.
 
 > `ELEVENLABS_API_KEY` is used server-side only (Vercel Edge function / Vite middleware) to generate signed session URLs. It never touches the browser.
@@ -207,6 +210,81 @@ instead of a saved file, so it is deliberately not used on native.
 
 ---
 
+## Phase 3 — Accounts and Usage Limits
+
+Optional. With no Firebase env vars set the app runs exactly as it did before:
+no sign-in button, no limits, nothing to configure.
+
+### Step 3.1 — Firebase project
+
+1. Create a Firebase project and enable **Authentication → Sign-in method → Google**
+2. Add your domains under **Authentication → Settings → Authorised domains**
+   (`killmystartup.today` and `localhost`)
+3. Create a **Firestore** database
+4. Copy the web app config from **Project settings → General → Your apps**
+
+### Step 3.2 — Environment variables
+
+Client (must be `VITE_`-prefixed to reach the browser; these are public by
+design and identify the project, they do not authorise anything):
+
+```env
+VITE_FIREBASE_API_KEY=...
+VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project
+VITE_FIREBASE_APP_ID=...
+```
+
+Server, used by `api/signed-url.ts` to verify ID tokens:
+
+```env
+FIREBASE_PROJECT_ID=your-project
+```
+
+### Step 3.3 — Firestore security rules
+
+Usage counters are written by the client, so these rules are the only thing
+stopping one account writing another's:
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /usage/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}
+```
+
+> These let a signed-in user write their **own** counter, which means a
+> determined user can reset their own minutes. That is inherent to metering
+> client-reported duration and is a deliberate trade. Closing it properly means
+> an ElevenLabs post-call webhook writing the counter server-side.
+
+### Step 3.4 — Limits
+
+Both live in `src/lib/quota.ts`:
+
+| Constant | Default | Applies to |
+| --- | --- | --- |
+| `FREE_ANON_SESSIONS` | 2 | Sessions before sign-in is required |
+| `MINUTE_CAP` | 60 | Lifetime minutes per signed-in account |
+
+The anonymous allowance is a per-device `localStorage` counter — clearing site
+data resets it. It exists to delay the consent screen for a first-time visitor,
+not to stop anyone determined. Only the signed-in cap is enforced server-side.
+
+### Step 3.5 — Android
+
+**Google sign-in does not work in the Android build as written.** Firebase's
+`signInWithPopup` needs a browser popup, which a Capacitor WebView does not
+provide; the native app needs a Capacitor Google Auth plugin and your release
+SHA-1 registered in the Firebase console. Until that is wired, the Android app
+behaves as it does today: no sign-in, no limits.
+
+---
+
 ## Project Structure
 
 ```
@@ -223,13 +301,18 @@ KillMyStartup/
 │   │   ├── SourcesPanel.tsx         # Right panel — sources per turn, collapsible
 │   │   └── PoweredBy.tsx
 │   ├── hooks/
-│   │   └── useAppConversation.ts    # ElevenLabs SDK wrapper + state machine
+│   │   ├── useAppConversation.ts    # ElevenLabs SDK wrapper + state machine
+│   │   └── useAuth.ts               # Firebase Google sign-in state
 │   └── lib/
 │       ├── utils.ts                 # Utility functions
+│       ├── firebase.ts              # Firebase app + auth, absent config tolerated
+│       ├── quota.ts                 # Allowance rules (no Firebase, no DOM)
+│       ├── usage.ts                 # Usage counter over the Firestore REST API
 │       ├── report.ts                # Autopsy Report + Transcript PDF generation
 │       └── savePdf.ts               # Writes a PDF to disk (native vs browser)
 ├── api/
-│   └── signed-url.ts               # Vercel Edge function — signs ElevenLabs session URLs
+│   ├── signed-url.ts               # Vercel Edge function — signs ElevenLabs session URLs
+│   └── _auth.ts                    # Firebase ID token verification (JWKS, Edge-safe)
 ├── scripts/
 │   └── set-session-cap.sh          # Sets the agent's max conversation duration
 ├── public/

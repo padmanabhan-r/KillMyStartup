@@ -4,6 +4,8 @@ import { SourcesPanel } from './components/SourcesPanel';
 import { PoweredBy } from './components/PoweredBy';
 import { AndroidBanner } from './components/AndroidBanner';
 import { useAppConversation } from './hooks/useAppConversation';
+import { useAuth } from './hooks/useAuth';
+import { AccountGate } from './components/AccountGate';
 import { saveAutopsyReport, saveTranscript } from './lib/report';
 import type { SaveResult } from './lib/savePdf';
 import type { AppState } from './types';
@@ -16,7 +18,11 @@ const stateLabels: Record<AppState, string> = {
 };
 
 export default function App() {
-  const { appState, connecting, turns, transcript, startSession, endSession, error } = useAppConversation();
+  const { user, signIn, signOut, available } = useAuth();
+  const {
+    appState, connecting, turns, transcript, error,
+    blocked, secondsUsed, startSession, endSession,
+  } = useAppConversation(user);
   const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [saveNote, setSaveNote] = useState<string | null>(null);
@@ -139,6 +145,15 @@ export default function App() {
               </p>
             )}
           </div>
+
+          <AccountGate
+            user={user}
+            available={available}
+            blocked={blocked}
+            secondsUsed={secondsUsed}
+            onSignIn={() => { void signIn(); }}
+            onSignOut={() => { void signOut(); }}
+          />
 
           {error && (
             <p className="text-[11px] text-red-400/70 font-mono text-center max-w-xs">
