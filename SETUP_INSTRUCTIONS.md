@@ -122,6 +122,24 @@ This is also handled in the React frontend — it parses the sources string and 
    - Agent speaks a brutal roast
 4. If tools don't fire: check the system prompt tool-call sequence and tool descriptions
 
+### Step 1.7 — Session length cap
+
+The agent cuts a conversation off at `max_duration_seconds` (ElevenLabs default:
+600s / 10 min). Set it from the console under **Advanced → Max conversation
+duration**, or from the repo once `.env.local` exists:
+
+```bash
+./scripts/set-session-cap.sh 60   # minutes; allowed range is 1–120
+```
+
+The script reads the value back after writing it, so a silently rejected change
+fails instead of looking like it worked.
+
+> Raising the cap raises the ceiling on credit burn with it — ElevenLabs bills
+> per minute, and an abandoned session with the mic still open runs until the cap.
+> `conversation_config.turn.turn_timeout` only decides how long the agent waits
+> before prompting again; it re-prompts rather than hanging up.
+
 ---
 
 ## Phase 2 — Local Development
@@ -188,6 +206,7 @@ KillMyStartup/
 │   ├── assets/                      # Static assets
 │   ├── components/
 │   │   ├── Orb.tsx                  # 4-state animated orb
+│   │   ├── SearchingStatus.tsx      # Rotating status lines shown while searching
 │   │   ├── SourcesPanel.tsx         # Right panel — sources per turn, collapsible
 │   │   └── PoweredBy.tsx
 │   ├── hooks/
@@ -196,6 +215,8 @@ KillMyStartup/
 │       └── utils.ts                 # Utility functions
 ├── api/
 │   └── signed-url.ts               # Vercel Edge function — signs ElevenLabs session URLs
+├── scripts/
+│   └── set-session-cap.sh          # Sets the agent's max conversation duration
 ├── public/
 │   └── favicon.svg
 └── prompts/
