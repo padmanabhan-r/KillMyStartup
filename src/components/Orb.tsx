@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { SearchingStatus } from "./SearchingStatus";
 import type { AppState } from "../types";
 
 // Map our AppState to orb visual states
@@ -118,6 +119,8 @@ export function Orb({ state }: OrbProps) {
           />
         </div>
       </div>
+
+      {orbState === "pondering" && <SearchingStatus />}
     </div>
   );
 }
