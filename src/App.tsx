@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { jsPDF } from 'jspdf';
 import { Orb } from './components/Orb';
 import { SourcesPanel } from './components/SourcesPanel';
 import { PoweredBy } from './components/PoweredBy';
 import { AndroidBanner } from './components/AndroidBanner';
 import { useAppConversation } from './hooks/useAppConversation';
+import { savePdf } from './lib/savePdf';
 import type { AppState, Turn } from './types';
 
 const stateLabels: Record<AppState, string> = {
@@ -124,13 +125,35 @@ function downloadReport(turns: Turn[]) {
   doc.text('Powered by ElevenLabs & Firecrawl', margin, y);
   doc.text('killmystartup.today', W - margin, y, { align: 'right' });
 
-  doc.save(`autopsy-report-${Date.now()}.pdf`);
+  return savePdf(doc, `autopsy-report-${Date.now()}.pdf`);
 }
 
 export default function App() {
   const { appState, connecting, turns, startSession, endSession, error } = useAppConversation();
   const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [saveNote, setSaveNote] = useState<string | null>(null);
+
+  // On native the file is written silently, so without a line of feedback the
+  // button looks like it did nothing at all.
+  useEffect(() => {
+    if (!saveNote) return;
+    const id = setTimeout(() => setSaveNote(null), 6000);
+    return () => clearTimeout(id);
+  }, [saveNote]);
+
+  const handleDownload = async () => {
+    try {
+      const result = await downloadReport(turns);
+      setSaveNote(
+        result.kind === 'saved' ? `Saved to ${result.folder}`
+        : result.kind === 'unavailable' ? "Couldn't save the report on this device."
+        : null,
+      );
+    } catch {
+      setSaveNote("Couldn't save the report.");
+    }
+  };
 
   const handleClick = () => {
     if (appState === 'idle') {
@@ -206,11 +229,17 @@ export default function App() {
 
             {showDownload && (
               <button
-                onClick={() => downloadReport(turns)}
+                onClick={handleDownload}
                 className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/80 font-mono hover:text-foreground transition-colors duration-200"
               >
                 Download Autopsy Report
               </button>
+            )}
+
+            {saveNote && (
+              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60 font-mono animate-fade-in-up">
+                {saveNote}
+              </p>
             )}
           </div>
 

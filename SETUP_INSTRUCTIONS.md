@@ -192,6 +192,19 @@ The Vite dev server includes a middleware that proxies signed URL requests to El
    - Orb goes red (roasting) — agent speaks
 5. After **I Quit** — right panel closes, Download Autopsy Report button appears
 
+### Step 2.5 — Android (Capacitor) prerequisite
+
+The Autopsy Report is written to the device with the Capacitor **Filesystem**
+plugin. Install it in the Capacitor project that wraps this app:
+
+```bash
+npm install @capacitor/filesystem && npx cap sync android
+```
+
+Without it the app reports "Couldn't save the report on this device" rather than
+falling back to `jsPDF.save()` — that fallback is what produced a share sheet
+instead of a saved file, so it is deliberately not used on native.
+
 ---
 
 ## Project Structure
@@ -212,7 +225,8 @@ KillMyStartup/
 │   ├── hooks/
 │   │   └── useAppConversation.ts    # ElevenLabs SDK wrapper + state machine
 │   └── lib/
-│       └── utils.ts                 # Utility functions
+│       ├── utils.ts                 # Utility functions
+│       └── savePdf.ts               # Writes the report to disk (native vs browser)
 ├── api/
 │   └── signed-url.ts               # Vercel Edge function — signs ElevenLabs session URLs
 ├── scripts/
