@@ -30,3 +30,4 @@ implementation/
 notes/
 prompts/AGENT_SYSTEM_PROMPT_v2.md
 tools/
+.vercel
