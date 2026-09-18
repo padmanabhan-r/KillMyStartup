@@ -18,13 +18,12 @@ function auth(): { project: string; headers: Record<string, string> } {
 }
 
 interface BalanceItem {
-  code?: string;
-  virtual_currency_code?: string;
+  currency_code?: string;
   balance?: number;
 }
 
-function pickBalance(items: BalanceItem[] | undefined): number {
-  const item = items?.find((i) => (i.code ?? i.virtual_currency_code) === CURRENCY);
+export function pickBalance(items: BalanceItem[] | undefined): number {
+  const item = items?.find((i) => i.currency_code === CURRENCY);
   const balance = item?.balance;
   return typeof balance === 'number' && Number.isFinite(balance) ? Math.max(0, balance) : 0;
 }
