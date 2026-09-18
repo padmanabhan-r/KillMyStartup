@@ -53,30 +53,20 @@ Sources appear in the right panel as they're found. After the session, download 
 
 ---
 
-## How the search works
+## How it works
 
-Firecrawl Search is the backbone of the system — wired directly into ElevenAgents as a webhook, called live on every conversation.
+While you pitch, the app runs live web searches in the background and feeds the results straight back into the argument. The search is deliberately narrow: a handful of recent web and news results per query, aimed at one of three questions: who already does this, how much money has gone into it, and who died trying. An objection with a source beats an opinion, and founders are very good at ignoring opinions.
 
-The search is deliberately constrained:
-
-- **3 web + 3 news results** — enough evidence to land a devastating verdict, not enough to overwhelm a conversational agent with context
-- **Past 12 months, sorted newest first** — stale data gives founders an out; fresh data doesn't. Results are sorted by date so the most recent evidence surfaces first
-- **Three attack vectors** — every query targets one of: existing competitors, funding scale, or startups that already died doing this
-
-This isn't search bolted on. The tight context window is the design — a conversational agent performs best when given the right amount of information, not the most information.
+Everything it finds lands in the Evidence panel as the conversation runs, and you can take it all away as an Autopsy Report PDF.
 
 ---
 
-## Built with
+## Android app
 
-| | |
-|---|---|
-| **[ElevenAgents](https://elevenlabs.io/docs/agents-platform/overview)** | Handles everything voice — speech-to-text, LLM, text-to-speech, and tool orchestration. No separate backend. |
-| **[Firecrawl Search](https://docs.firecrawl.dev/features/search)** | Wired into ElevenAgents as a webhook. Called live during every conversation — real results, not cached. Returns web + news results in a single call. |
-| **Vite + React + TypeScript** | Frontend, deployed to Vercel. |
+KillMyStartup is on Google Play. The first ten minutes are free; after that it is a small one-off purchase for thirty more, or a short ad for five. Minutes are tied to your device, so reinstalling does not reset them.
 
 ---
 
 ## Setup
 
-→ **[Full setup instructions](SETUP_INSTRUCTIONS.md)** — ElevenAgents config, Firecrawl wiring, and local dev.
+→ **[Setup instructions](SETUP_INSTRUCTIONS.md)** for local development.

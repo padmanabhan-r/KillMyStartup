@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { jsPDF } from 'jspdf';
 import { Orb } from './components/Orb';
 import { SourcesPanel } from './components/SourcesPanel';
-import { PoweredBy } from './components/PoweredBy';
 import { AndroidBanner } from './components/AndroidBanner';
 import { useAppConversation } from './hooks/useAppConversation';
 import type { AppState, Turn } from './types';
@@ -121,7 +120,6 @@ function downloadReport(turns: Turn[]) {
   doc.setFont('courier', 'normal');
   doc.setFontSize(7);
   doc.setTextColor(160, 160, 160);
-  doc.text('Powered by ElevenLabs & Firecrawl', margin, y);
   doc.text('killmystartup.today', W - margin, y, { align: 'right' });
 
   doc.save(`autopsy-report-${Date.now()}.pdf`);
@@ -228,8 +226,6 @@ export default function App() {
           <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/70 font-mono select-none">
             KillMyStartup
           </span>
-          <span className="text-muted-foreground/30 font-mono text-[10px]">|</span>
-          <PoweredBy />
         </div>
       </div>
 
